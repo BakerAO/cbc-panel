@@ -1,0 +1,10 @@
+FROM node:16
+
+WORKDIR /api
+COPY . /api
+
+RUN npm i
+
+EXPOSE 8001
+
+CMD ["node", "server.js"]

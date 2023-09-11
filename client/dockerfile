@@ -1,0 +1,10 @@
+FROM node:16
+
+WORKDIR /ui
+COPY . /ui
+
+RUN npm i
+
+EXPOSE 8080
+
+CMD ["sh", "-c", "PORT=8080 npm start"]
