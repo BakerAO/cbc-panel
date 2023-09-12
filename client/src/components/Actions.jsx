@@ -1,4 +1,5 @@
-// import api from '../data/api'
+import { useState } from 'react'
+import ActionsModal from './ActionsModal'
 
 const styles = {
   container: {
@@ -29,16 +30,28 @@ const styles = {
     alignItems: 'center',
     fontWeight: 'bold',
   },
+  minus: {
+    height: '10px',
+    width: '30px',
+    backgroundColor: 'white',
+  },
 }
 
-export default function CreatePerson() {
+export default function Actions(props) {
+  const { people } = props
+  const [action, setAction] = useState(null)
+
   return (
     <div style={styles.container}>
-      <button style={styles.button}>
+      <button style={styles.button} onClick={() => setAction('create')}>
         <div style={styles.inside}>
           +
         </div>
       </button>
+      <button style={{ ...styles.button, backgroundColor: 'red' }} onClick={() => setAction('delete')}>
+        <div style={styles.minus} />
+      </button>
+      <ActionsModal action={action} setAction={setAction} people={people} />
     </div>
   )
 }

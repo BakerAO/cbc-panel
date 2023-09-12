@@ -1,7 +1,6 @@
 import { Router as ExRouter } from 'express'
 import mysqlPool from './mysqlPool.js'
 
-
 const getPeople = `
   SELECT
     id,
@@ -53,21 +52,68 @@ const wrapper = (io, room) => {
           WHERE name = '${name}'
         `
         await mysqlPool.query(updateQuery)
-
-        const [updates] = await mysqlPool.query(getPeople)
-        io.sockets.to(room).emit('update', updates)
       } else {
         const deletePerson = `
           DELETE FROM people
           WHERE name = '${name}'
         `
         await mysqlPool.query(deletePerson)
-        io.sockets.to(room).emit('delete', { name })
       }
 
+      const [newPeople] = await mysqlPool.query(getPeople)
+      io.sockets.to(room).emit('update', newPeople)
       res.status(200).send('Success')
     } catch (e) {
       res.status(500).send(e)
+    }
+  })
+
+  router.post('/create', async (req, res) => {
+    try {
+      const { name, saved } = req.body
+      const [people] = await mysqlPool.query(getPeople)
+      if (people.some(p => name === p.name) || !name) {
+        res.status(400).send('Bad Request Man')
+        return
+      }
+
+      const createPerson = `
+        INSERT INTO people (
+          name,
+          inBuilding,
+          saved
+        )
+        VALUES (
+          '${name}',
+          true,
+          ${saved}
+        )
+      `
+      await mysqlPool.query(createPerson)
+
+      const [newPeople] = await mysqlPool.query(getPeople)
+      io.sockets.to(room).emit('update', newPeople)
+      res.status(200).send(newPeople)
+    } catch (err) {
+      res.status(500).send(err)
+    }
+  })
+
+  router.post('/delete', async (req, res) => {
+    try {
+      const { name } = req.body
+
+      const deletePerson = `
+        DELETE FROM people
+        WHERE name = '${name}'
+      `
+      await mysqlPool.query(deletePerson)
+
+      const [newPeople] = await mysqlPool.query(getPeople)
+      io.sockets.to(room).emit('update', newPeople)
+      res.status(200).send(newPeople)
+    } catch (err) {
+      res.status(500).send(err)
     }
   })
 
