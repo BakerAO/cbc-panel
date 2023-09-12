@@ -16,7 +16,7 @@ services:
   #     - "8001:8001"
   db:
     image: mariadb
-    container_name: mariadb-container
+    container_name: cbc-mariadb-container
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
