@@ -6,7 +6,7 @@ services:
       context: ./client/
       dockerfile: dockerfile
     ports:
-      - "8000:8000"
+      - "80:8000"
   api:
     container_name: cbc-api-container
     environment:
@@ -32,6 +32,5 @@ services:
       - "8002:3306"
     volumes:
       - mariadb-volume:/var/lib/mysql
-
 volumes:
   mariadb-volume:
