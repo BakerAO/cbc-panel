@@ -19,6 +19,10 @@ const wrapper = (io, room) => {
         <head>CBC-API</head>
         <body>
           <h1>CBC-API</h1>
+          <p> ${process.env.MYSQL_PORT}</p>
+          <p> ${process.env.MYSQL_USER}</p>
+          <p> ${process.env.MYSQL_DATABASE}</p>
+          <p> ${process.env.MYSQL_PASSWORD}</p>
           <a href="/generate">
             <button>Generate</button>
           </a>
